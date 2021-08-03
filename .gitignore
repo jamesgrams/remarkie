@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/*
+npm-debug.log
+.env
+google-token.json
+.remarkable-token
+credentials.json
+temp
+temp.pdf

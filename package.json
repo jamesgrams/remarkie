@@ -1,0 +1,24 @@
+{
+  "name": "remarkie",
+  "author": "James Grams <james@game103.net>",
+  "version": "1.0.0",
+  "description": "Email documents of any type to your Remarkable tablet",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "googleapis": "^83.0.0",
+    "libreoffice-convert": "jamesgrams/libreoffice-convert#maybe-fix-window",
+    "dotenv": "^10.0.0",
+    "remarkable-typescript": "^1.1.2",
+    "pdfkit": "^0.12.3",
+    "file-type": "^16.5.2",
+    "mimetext": "^0.2.2"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
