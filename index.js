@@ -52,7 +52,7 @@ main();
  */
 async function monitor() {
     if( process.argv[2] ) {
-        convert( (await fs.readFile(process.argv[2].toString())) );
+        await convert( (await fs.readFile(process.argv[2].toString())) );
         rl.close();
     }
     else {
@@ -133,15 +133,25 @@ async function monitor() {
                                     await sendMail("Failed to convert to PDF 🙁");
                                 }
                                 console.log("Uploading attachment");
-                                try {
+                                let upload = async function() {
                                     await remarkable.uploadPDF( part.filename + " - " + new Date().toLocaleString(), await fs.readFile(TEMP_PDF_PATH) );
                                     console.log("Uploaded");
                                     await sendMail("Upload Successful 🙂");
+                                    return Promise.resolve();
+                                }
+                                try {
+                                    await upload();
                                 }
                                 catch(err) {
                                     console.log("Error uploading PDF, trying to log in to reMarkable again");
                                     remarkable = await loginRemarkable();
-                                    await sendMail("Could not upload to reMarkable 🙁");
+                                    try {
+                                        await upload();
+                                    }
+                                    catch(err) {
+                                        console.log("Remarkable couldn't be logged into");
+                                        await sendMail("Could not upload to reMarkable 🙁");
+                                    }
                                 }
                             }
                         }
@@ -156,8 +166,8 @@ async function monitor() {
                 console.log(err);
                 try {
                     console.log("Error, trying to log in to Google again");
-                    await loginGoogle();
-                    google.gmail({version: "v1", auth: auth});
+                    auth = await loginGoogle();
+                    gmail = google.gmail({version: "v1", auth: auth});
                 }
                 catch(err) {
                     console.log(err);
